@@ -2,10 +2,10 @@
 ## 1. 简介
 使用`Nodejs`写的爬虫程序，用于从[小说吧](http://www.xs8.com)爬取小说，并将资料保存到[`sqlite`](http://www.baidu.com)数据库中，包含以字段：
 
-    1. 小说标题(`novel_name`)
-    2. 第几章(`chapter_index`)
-    3. 章节标题(`chapter`)
-    4. 章节正文(`content`)
+    1. 小说标题(novel_name)
+    2. 第几章(chapter_index)
+    3. 章节标题(chapter)
+    4. 章节正文(content)
 ## 2. 创建项目
 本例中项目命名为`node_crawler`
 ``` shell
@@ -53,7 +53,7 @@ request({
 const request=require("request");
 const JSDOM=require("jsdom").JSDOM;
 request({
-    url: "https://www.xs8.cn/chapter/10684980704041603/28682355652566083",
+    url: targetUrl,
     methd: "get",
     headers: {
         "user-agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
@@ -216,4 +216,3 @@ db.serialize(function () {
     });
 })
 ```
-

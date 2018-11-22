@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>微信案例</title>
+</head>
+<style>
+
+  a.item{
+      display: block;
+      font-family: "calibri","微软雅黑";
+      height: 30px;
+      line-height: 30px;
+      text-indent: 20px;
+      color: #333;
+      background-color: #dedede;
+      text-decoration: none;
+      margin: 3px;
+  }
+
+</style>
+
+<script id="template" type="text/ejs-template">
+    <a class="item" href="<%=link%>" >
+        <%=title%>
+     </a>
+</script>
+
+<body>
+
+    <div class="weui-panel weui-panel_access">
+        <div id="panelBody"></div>
+    </div>
+
+    <script type="text/javascript">
+        var templateStr = document.getElementById('template').innerHTML;
+        var panelBody = document.getElementById('panelBody');
+
+        var array = [{
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tianya.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.lululu.cc",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.xiaojiejie99.xyz",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.tmall.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.vmall.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.huawei.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.apple.com",
+                pic: 'image.jpg'
+            }, {
+                title: '勇士对太阳',
+                link: "http://www.samsung.com",
+                pic: 'image.jpg'
+            },
+            {
+                title: '骑士对热火',
+                link: "http://www.baidu.com",
+                pic: 'image.jpg'
+            }
+        ];
+
+        var temp = [];
+        array.forEach(function (element) {
+
+            console.log(element);
+            temp.push(formatHtml(templateStr, element))
+
+        }, this);
+
+        panelBody.innerHTML = temp.join('');
+
+        //格式化
+        function formatHtml(str, obj) {
+            return str.replace('<%=title%>', obj.title).replace("<%=link%>", obj.link);
+        }
+    </script>
+</body>
+
+</html>
