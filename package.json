@@ -1,0 +1,17 @@
+{
+  "name": "node_crawler",
+  "version": "1.0.0",
+  "description": "simple node crawler",
+  "main": "app.js",
+  "dependencies": {
+    "sqlite3": "^4.0.3",
+    "jsdom": "^13.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node app"
+  },
+  "keywords": ["node_crawler"],
+  "author": "huafua",
+  "license": "ISC"
+}
