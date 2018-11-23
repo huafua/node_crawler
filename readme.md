@@ -198,7 +198,6 @@ function getData(targetUrl, callback) {
 ```
 对公共的回调进行封装
 ```js
-
 function callback(data) {
     let document = new JSDOM(data.toString()).window.document;
     let vipRequired = document.querySelector("div.vip-limit-wrap");
@@ -266,8 +265,9 @@ function start_crawler(){
     })
 }
 ```
-<a href="#getSingleNovel"></a>
+<a id="getSingleNovel"></a>
 获取单个小说的链接
+
 ```js
 function getSingleNovel(xsurl,callback){
     request({
@@ -288,6 +288,7 @@ function getSingleNovel(xsurl,callback){
     });
 }
 ```
+
 ```js
 //获取小说的入口
 function novelEntry(start_url){
@@ -312,5 +313,7 @@ function novelEntry(start_url){
 start_crawler();
 ```
 
+再次运行，应该可以将更多的数据保存到数据库中，如下图示，如遇到问题，得继续处理掉！
 
-再次运行，应该可以将更多的数据保存到数据库中，如遇到问题，得继续处理掉！
+![成功运行后的结果](./readme-static/after_crawl.png)
+
