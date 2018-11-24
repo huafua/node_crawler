@@ -317,3 +317,4 @@ start_crawler();
 
 ![成功运行后的结果](./readme-static/after_crawl.png)
 
+添加了一个脚本`export.js`用于将爬取的小说导出为`txt`文件，供手机阅读
