@@ -3,7 +3,7 @@ const path=require("path");
 // let targetUrl = "https://www.xs8.cn/chapter/10684980704041603/28682355652566083";
 // targetUrl = "https://www.xs8.cn/chapter/10220792103411103/27436261890607674";
 // targetUrl="https://www.xs8.cn/chapter/9673619303540603/25967671660972822";
-let start_url="https://www.xs8.cn/all?pageNum=1&pageSize=1000&gender=1&catId=-1&isFinish=-1&isVip=-1&size=-1&updT=-1&orderBy=0";
+let start_url="https://www.xs8.cn/all?pageNum=1&pageSize=100&gender=1&catId=-1&isFinish=-1&isVip=-1&size=-1&updT=-1&orderBy=0";
 const request = require("request");
 const http = require("http");
 const url = require("url");
@@ -20,7 +20,15 @@ function getData(targetUrl, callback) {
         methd: "get",
         headers: headers
     }, function (err, res, body) {
-        callback && callback(body);
+	if(err){
+		console.log(err);
+	}else{
+	if(res.statusCode==200){
+		    callback && callback(body);
+		}else{
+			console.log("Got nothing,statusCode:"+res.statusCode);
+		}
+	}
     })
 }
 

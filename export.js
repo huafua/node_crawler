@@ -20,7 +20,7 @@ db.all("select distinct novel_name from xs",function(err,novels){
                         data.forEach(function(item){
                             str+=item.chapter_index+" "+item.chapter+"\n"+item.content+"\n";
                         });
-                        fs.writeFile(novel.novel_name+".txt",str,function(err){
+                        fs.writeFile("xs/"+novel.novel_name+".txt",str,function(err){
                             if(err){
                                 console.log(err);
                             }else{
