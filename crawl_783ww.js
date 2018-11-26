@@ -3,24 +3,58 @@ const JSDOM=require("jsdom").JSDOM;
 const path=require("path");
 const fs=require("fs");
 const url=require("url");
+const sqlite=require("sqlite3");
+const db=new sqlite.Database("data.sqlite");
+const tableName="783ww";
+
+db.exec("CREATE TABLE "+tableName+"(id	INTEGER PRIMARY KEY AUTOINCREMENT,title	TEXT,content BLOB)",function(){
+    console.log("table existed or created...");
+    craw_all("https://www.783ww.com/Html/84/",function(sing_page_url){
+        get_single_page_urls(sing_page_url,save_single_novel)
+        // console.log(sing_page_url)
+    });
+});
+
+function save_single_novel_to_database(single_novel){
+    db.serialize(function(){
+        let insertStmt=db.prepare("insert into `"+tableName+"`(title,content) values(?,?)");
+        insertStmt.run(single_novel.title,single_novel.content);
+        insertStmt.finalize(function(err){
+            if(err){
+                log(err);
+            }else{
+                console.log("novel "+single_novel.title+" saved!");
+            }
+        });
+        console.log(single_novel.title);
+    });
+}
+
+function save_single_novel_to_txt(single_novel){
+    let save_path="783ww";
+    let save_file=path.join(__dirname,save_path,single_novel.title+".txt");
+    fs.writeFile(save_file,single_novel.title+"\n"+single_novel.content,function(err){
+        if(err){
+            log(err);
+        }else{
+            console.log("Novel saved to "+save_file);
+        }
+    })
+}
 
 
-let save_path="783ww";
 let delay=2000;
-
-let start_url="https://www.783ww.com/Html/84/13269.html";
 
 let headers={
     "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/70.0.3538.77 Chrome/70.0.3538.77 Safari/537.36"
 };
 
 function log(message){
-    fs.writeFile("error.log",message+(new Date().toLocaleString())+"\r",{flag:"a"},function(){
+    fs.writeFile("error.log",(new Date().toLocaleString())+":"+message+"\r",{flag:"a"},function(){
         console.log("error message saved to error.log");
     })
 }
-function save_single_novel(novel_url){
-    
+function save_single_novel(novel_url,callback){
     request({
         url:novel_url,
         headers:headers
@@ -32,17 +66,10 @@ function save_single_novel(novel_url){
                 try{
                     let dom=new JSDOM(body.toString());
                     let document=dom.window.document;
-                    console.log(novel_url);
                     let novel_title=document.querySelector("div.page_title h1").innerHTML;
                     let novel_content=document.querySelector("div.content font").innerHTML;
-                    let save_file=path.join(__dirname,save_path,novel_title+".txt");
-                    fs.writeFile(save_file,novel_title+"\n"+novel_content,function(err){
-                        if(err){
-                            log(err);
-                        }else{
-                            console.log("Novel saved to "+save_file);
-                        }
-                    })
+                    let single_novel={title:novel_title,content:novel_content};
+                    callback&&callback(single_novel);
                 }catch(err){
                     log(err);
                 }
@@ -74,7 +101,8 @@ function get_single_page_urls(start_url,callback){
                     for(let i=0;i<novel_link_elements.length;i++){
                         (function(index){
                         setTimeout(function(){
-                                callback&&callback(webSiteBase+novel_link_elements[index].getAttribute("href"))
+                                let link=webSiteBase+novel_link_elements[index].getAttribute("href");
+                                callback&&callback(link,save_single_novel_to_database)
                         },index*delay);
                         })(i)
                     }
@@ -127,7 +155,3 @@ function craw_all(start_url,callback){
         }
     })
 }
-craw_all("https://www.783ww.com/Html/84/",function(sing_page_url){
-    get_single_page_urls(sing_page_url,save_single_novel)
-    // console.log(sing_page_url)
-});
