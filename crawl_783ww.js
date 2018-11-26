@@ -13,6 +13,12 @@ let start_url="https://www.783ww.com/Html/84/13269.html";
 let headers={
     "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/70.0.3538.77 Chrome/70.0.3538.77 Safari/537.36"
 };
+
+function log(message){
+    fs.writeFile("error.log",message+(new Date().toLocaleString())+"\r",{flag:"a"},function(){
+        console.log("error message saved to error.log");
+    })
+}
 function save_single_novel(novel_url){
     
     request({
@@ -20,7 +26,7 @@ function save_single_novel(novel_url){
         headers:headers
     },function(err,res,body){
         if(err){
-            console.log(err);
+            log(err);
         }else{
             if(res.statusCode==200){
                 try{
@@ -32,16 +38,16 @@ function save_single_novel(novel_url){
                     let save_file=path.join(__dirname,save_path,novel_title+".txt");
                     fs.writeFile(save_file,novel_title+"\n"+novel_content,function(err){
                         if(err){
-                            console.log("Failed to save date");
+                            log(err);
                         }else{
                             console.log("Novel saved to "+save_file);
                         }
                     })
-                }catch(er){
-                    console.log(er);
+                }catch(err){
+                    log(err);
                 }
             }else{
-                console.log("Got nothing, status code:"+res.statusCode);
+                log("Got nothing, status code:"+res.statusCode);
             }
         }
     })
@@ -55,24 +61,28 @@ function get_single_page_urls(start_url,callback){
         headers:headers
     },function(err,res,body){
         if(err){
-            console.log(err);
+            log(err);
         }else{
             if(res.statusCode==200){
-                let dom=new JSDOM(body.toString());
-                let document=dom.window.document;
-                let novel_link_elements=document.querySelectorAll("div.box.list.channel ul li a");
-                Array.prototype.forEach.call(novel_link_elements,function(novel_link_element){
-                    callback&&callback(webSiteBase+novel_link_element.getAttribute("href"))
-                });
-                for(let i=0;i<novel_link_elements.length;i++){
-                    (function(index){
-                       setTimeout(function(){
-                            callback&&callback(webSiteBase+novel_link_elements[index].getAttribute("href"))
-                       },index*delay);
-                    })(i)
+                try{
+                    let dom=new JSDOM(body.toString());
+                    let document=dom.window.document;
+                    let novel_link_elements=document.querySelectorAll("div.box.list.channel ul li a");
+                    Array.prototype.forEach.call(novel_link_elements,function(novel_link_element){
+                        callback&&callback(webSiteBase+novel_link_element.getAttribute("href"))
+                    });
+                    for(let i=0;i<novel_link_elements.length;i++){
+                        (function(index){
+                        setTimeout(function(){
+                                callback&&callback(webSiteBase+novel_link_elements[index].getAttribute("href"))
+                        },index*delay);
+                        })(i)
+                    }
+                }catch(err){
+                    log(err);
                 }
             }else{
-                console.log("Got nothing, status code:"+res.statusCode);
+                log("Got nothing, status code:"+res.statusCode);
             }
         }
     })
@@ -88,27 +98,31 @@ function craw_all(start_url,callback){
         headers:headers
     },function(err,res,body){
         if(err){
-            console.log(err);
+            log(err);
         }else{
             if(res.statusCode==200){
-                let dom=new JSDOM(body.toString());
-                let document=dom.window.document;
-                let pages=document.querySelectorAll("div.pagination a");
-                let last_page_link=pages[pages.length-1].getAttribute("href");
-                last_page_link_parts=last_page_link.split("-");
-                let suffix_name_parts=last_page_link_parts[1].split(".");
-                let page_count=suffix_name_parts[0];
-                for(let i=1;i<=10;i++){
-                    (function(index){
-                        setTimeout(function(){
-                            let sing_page_url=webSiteBase+last_page_link_parts[0]+"-"+index+"."+suffix_name_parts[1]
-                            callback&&callback(sing_page_url);
-                        },index*delay);                        
-                    })(i)
-                    
+                try{
+                    let dom=new JSDOM(body.toString());
+                    let document=dom.window.document;
+                    let pages=document.querySelectorAll("div.pagination a");
+                    let last_page_link=pages[pages.length-1].getAttribute("href");
+                    last_page_link_parts=last_page_link.split("-");
+                    let suffix_name_parts=last_page_link_parts[1].split(".");
+                    let page_count=suffix_name_parts[0];
+                    for(let i=1;i<=page_count;i++){
+                        (function(index){
+                            setTimeout(function(){
+                                let sing_page_url=webSiteBase+last_page_link_parts[0]+"-"+index+"."+suffix_name_parts[1]
+                                callback&&callback(sing_page_url);
+                            },index*delay);                        
+                        })(i)
+                        
+                    }
+                }catch(err){
+                    log(err);
                 }
             }else{
-                console.log("Got nothing, status code:"+res.statusCode);
+                log("Got nothing, status code:"+res.statusCode);
             }
         }
     })
